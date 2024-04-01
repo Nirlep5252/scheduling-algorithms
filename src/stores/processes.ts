@@ -2,7 +2,7 @@ import { create } from "zustand";
 import { persist } from "zustand/middleware";
 
 interface Process {
-  id: number;
+  id: string;
   name: string;
   arrivalTime: number;
   burstTime: number;
@@ -14,7 +14,7 @@ interface State {
 
 interface Actions {
   addProcess: (process: Process) => void;
-  removeProcess: (id: number) => void;
+  removeProcess: (id: string) => void;
   clearProcesses: () => void;
 }
 
