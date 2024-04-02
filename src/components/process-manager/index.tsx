@@ -9,12 +9,7 @@ interface Props {
 
 export const ProcessManager: React.FC<Props> = (props) => {
   return (
-    <div
-      className={cn(
-        props.className,
-        "rounded-lg border-2 border-accent p-2 relative"
-      )}
-    >
+    <div className={cn(props.className, "relative")}>
       <AddProcess />
       <ProcessTable />
     </div>
