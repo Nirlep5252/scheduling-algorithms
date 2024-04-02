@@ -3,6 +3,10 @@ import { SimulationController } from "./components/simulation-controller";
 import { GanttChart } from "./components/gantt-chart";
 import { ReadyQueue } from "./components/ready-queue";
 import { LiveProcessView } from "./components/live-process-table";
+import { SimulationController } from "./components/simulation-controller";
+import { GanttChart } from "./components/gantt-chart";
+import { ReadyQueue } from "./components/ready-queue";
+import { LiveProcessView } from "./components/live-process-table";
 
 // Terminology:
 // - Arrival Time
