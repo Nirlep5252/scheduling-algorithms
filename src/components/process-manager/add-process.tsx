@@ -23,7 +23,8 @@ export const AddProcess: React.FC<Props> = () => {
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const form = e.currentTarget;
-    const name = form["name"];
+    // @ts-expect-error - stupid ass typescript
+    const name = form["name"].value;
     const arrivalTime = parseInt(form["arrival-time"].value);
     const burstTime = parseInt(form["burst-time"].value);
     addProcess({ id: uuid.v4(), name, arrivalTime, burstTime });
