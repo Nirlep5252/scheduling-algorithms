@@ -1,7 +1,7 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 
-interface Process {
+export interface Process {
   id: string;
   name: string;
   arrivalTime: number;
