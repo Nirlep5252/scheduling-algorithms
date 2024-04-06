@@ -32,6 +32,6 @@ export const useProcessesStore = create<State & Actions>()(
     }),
     {
       name: "os-processes",
-    }
-  )
+    },
+  ),
 );

@@ -59,13 +59,23 @@ export const AddProcess: React.FC<Props> = () => {
               <Label htmlFor="arrival-time" className="text-right">
                 Arrival Time
               </Label>
-              <Input type="number" required id="arrival-time" className="col-span-3" />
+              <Input
+                type="number"
+                required
+                id="arrival-time"
+                className="col-span-3"
+              />
             </div>
             <div className="grid grid-cols-4 items-center gap-4">
               <Label htmlFor="burst-time" className="text-right">
                 Burst Time
               </Label>
-              <Input type="number" required id="burst-time" className="col-span-3" />
+              <Input
+                type="number"
+                required
+                id="burst-time"
+                className="col-span-3"
+              />
             </div>
           </div>
           <DialogFooter>
