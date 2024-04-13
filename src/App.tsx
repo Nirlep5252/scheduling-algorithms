@@ -4,6 +4,7 @@ import { GanttChart } from "@/components/gantt-chart";
 import { ReadyQueue } from "@/components/ready-queue";
 import { LiveProcessView } from "@/components/live-process-table";
 import { Toaster } from "@/components/ui/sonner";
+import { useSimulationStatus } from "./stores/simulation-status";
 
 // Terminology:
 // - Arrival Time
@@ -20,15 +21,23 @@ import { Toaster } from "@/components/ui/sonner";
 // - Priority (non-preamptive & preamptive) (crieteria: Priority)
 
 function App() {
+  const { algorithm } = useSimulationStatus();
+
   return (
     <>
       <Toaster />
       <div className="w-screen h-screen bg-background grid grid-cols-3 grid-rows-5 gap-4 p-16 [&>*]:rounded-lg [&>*]:border-2 [&>*]:border-accent [&>*]:p-2">
         <ProcessManager className="col-span-1 row-span-4" />
         <LiveProcessView className="col-span-2 row-span-3" />
-        <GanttChart className="col-span-2 row-span-1" />
+        <GanttChart
+          // @ts-expect-error round-robin is yet to be implemented so stfu typescript
+          className={`col-span-2 ${algorithm === "round-robin" ? "row-span-1" : "row-span-2"}`}
+        />
         <SimulationController className="col-span-1 row-span-1" />
-        <ReadyQueue className="col-span-2 row-span-1" />
+        {/* @ts-expect-error round-robin is yet to be implemented so stfu typescript */}
+        {algorithm === "round-robin" && (
+          <ReadyQueue className="col-span-2 row-span-1" />
+        )}
       </div>
     </>
   );

@@ -2,8 +2,9 @@ import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import { Process } from "./processes";
 import { toast } from "sonner";
+import { nextStep } from "@/lib/algorithms";
 
-interface SimulationProcess {
+export interface SimulationProcess {
   id: string;
   name: string;
   arrivalTime: number;
@@ -16,18 +17,16 @@ export interface SimulationState {
   isRunning: boolean;
   algorithm: "fcfs";
   processes: SimulationProcess[];
-  isFinished: boolean;
   currentTime: number;
   ganttChart: {
-    process: string;
+    process?: string;
     start: number;
     end: number;
   }[];
 }
 
 interface Actions {
-  pause: () => void;
-  resume: () => void;
+  stop: () => void;
   start: (processes: Process[]) => void;
   setAlgorithm: (algorithm: SimulationState["algorithm"]) => void;
 
@@ -44,13 +43,19 @@ export const useSimulationStatus = create<SimulationState & Actions>()(
       algorithm: "fcfs",
       processes: [],
       isFinished: true,
-      pause() {
-        set({ isRunning: false });
-      },
-      resume() {
-        set({ isRunning: true });
+      stop() {
+        set({
+          isRunning: false,
+          currentTime: 0,
+          ganttChart: [],
+          processes: [],
+        });
       },
       start(processes) {
+        set({
+          ganttChart: [],
+          currentTime: 0,
+        });
         if (processes.length === 0) return;
         set({
           isRunning: true,
@@ -64,7 +69,6 @@ export const useSimulationStatus = create<SimulationState & Actions>()(
               turnAroundTime: null,
             };
           }),
-          isFinished: false,
         });
       },
       setAlgorithm(algorithm) {
@@ -73,43 +77,19 @@ export const useSimulationStatus = create<SimulationState & Actions>()(
 
       next() {
         const state = get();
-        console.log(state.processes);
-        const incompleteProcesses = state.processes.filter(
-          (process) => process.completionTime === null,
+        const newData = nextStep(
+          state.algorithm,
+          state.processes,
+          state.currentTime
         );
-        console.log(incompleteProcesses);
-        switch (state.algorithm) {
-          case "fcfs":
-            incompleteProcesses.sort((a, b) => a.arrivalTime - b.arrivalTime);
-            set((state) => ({
-              currentTime: state.currentTime + incompleteProcesses[0].burstTime,
-              processes: state.processes.map((process) => {
-                if (process.id === incompleteProcesses[0].id) {
-                  return {
-                    ...process,
-                    completionTime: state.currentTime + process.burstTime,
-                    turnAroundTime:
-                      state.currentTime +
-                      process.burstTime -
-                      process.arrivalTime,
-                  };
-                }
-                return process;
-              }),
-              ganttChart: [
-                ...state.ganttChart,
-                {
-                  process: incompleteProcesses[0].id,
-                  start: state.currentTime,
-                  end: state.currentTime + incompleteProcesses[0].burstTime,
-                },
-              ],
-              isFinished: incompleteProcesses.length === 1,
-            }));
-            break;
-        }
-        if (incompleteProcesses.length === 1) {
+        set((state) => ({
+          currentTime: newData.newTime,
+          processes: newData.processes,
+          ganttChart: [...state.ganttChart, newData.ganttChartElement],
+        }));
+        if (newData.isFinished) {
           toast.success("Simulation finished!");
+          set({ isRunning: false });
         }
       },
       previous() {
@@ -136,6 +116,6 @@ export const useSimulationStatus = create<SimulationState & Actions>()(
     }),
     {
       name: "os-simulation-status",
-    },
-  ),
+    }
+  )
 );

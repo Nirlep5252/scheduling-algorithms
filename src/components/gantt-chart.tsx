@@ -3,7 +3,6 @@ import { useProcessesStore } from "@/stores/processes";
 import { useSimulationStatus } from "@/stores/simulation-status";
 import React from "react";
 import { useAutoAnimate } from "@formkit/auto-animate/react";
-import * as uuid from "uuid";
 
 interface Props {
   className?: string;
@@ -14,23 +13,41 @@ export const GanttChart: React.FC<Props> = (props) => {
   const { processes } = useProcessesStore();
   const [parent] = useAutoAnimate();
 
+  const total = ganttChart
+    .map((item) => item.end - item.start)
+    .reduce((a, b) => a + b, 0);
+  console.log(total);
+
   return (
     <div
       className={cn(
         props.className,
-        "rounded-lg flex items-center justify-center overflow-y-scroll gap-1",
+        "rounded-lg flex items-center justify-center overflow-x-scroll gap-1 w-full"
       )}
       ref={parent}
     >
       {ganttChart.length > 0 ? (
-        ganttChart.map((item) => {
+        ganttChart.map((item, index) => {
           return (
             <div
-              key={item.process || uuid.v4()}
-              className={`${item.process === "" ? "bg-red-400" : "bg-primary"} h-20 rounded-lg flex items-center justify-center`}
-              style={{ width: `${(item.end - item.start) * 20}px` }}
+              key={index}
+              className="relative group"
+              style={{ width: `${((item.end - item.start) / total) * 100}%` }}
             >
-              {processes.find((process) => process.id === item.process)?.name}
+              <div
+                className={`${!item.process ? "border-4 border-primary" : "bg-primary"} h-20 rounded-lg flex items-center justify-center`}
+              >
+                {item.process
+                  ? processes.find((process) => process.id === item.process)
+                      ?.name
+                  : "Idle"}
+              </div>
+              <div className="absolute left-2 bottom-2 hidden group-hover:block">
+                {item.start}
+              </div>
+              <div className="absolute right-2 bottom-2 hidden group-hover:block">
+                {item.end}
+              </div>
             </div>
           );
         })

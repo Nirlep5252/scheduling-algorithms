@@ -3,8 +3,8 @@ import { Button } from "@/components/ui/button";
 import {
   ArrowLeftIcon,
   ArrowRightIcon,
-  PauseIcon,
   PlayIcon,
+  StopIcon,
 } from "@radix-ui/react-icons";
 import { cn } from "@/lib/utils";
 import {
@@ -28,13 +28,11 @@ export const SimulationController: React.FC<Props> = (props) => {
   const {
     isRunning,
     setAlgorithm,
-    pause,
-    resume,
+    stop,
     start,
     next,
     previous,
     algorithm,
-    isFinished,
     ganttChart,
   } = useSimulationStatus();
   const { processes } = useProcessesStore();
@@ -68,14 +66,10 @@ export const SimulationController: React.FC<Props> = (props) => {
         </Button>
         <Button
           onClick={() => {
-            if (isFinished) {
-              start(processes);
-              return;
-            }
             if (isRunning) {
-              pause();
+              stop();
             } else {
-              resume();
+              start(processes);
             }
           }}
           size="icon"
@@ -84,11 +78,11 @@ export const SimulationController: React.FC<Props> = (props) => {
           {!isRunning ? (
             <PlayIcon className="w-6 h-6" />
           ) : (
-            <PauseIcon className="w-6 h-6" />
+            <StopIcon className="w-6 h-6" />
           )}
         </Button>
         <Button
-          disabled={!isRunning || isFinished}
+          disabled={!isRunning}
           variant={"ghost"}
           size="icon"
           className="w-12 h-12"

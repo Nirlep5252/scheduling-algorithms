@@ -25,9 +25,12 @@
     --ring: 263.4 70% 50.4%;
     --radius: 0.6rem;
   }
-}
 
-@layer base {
+  *::selection {
+    @apply bg-primary text-primary-foreground;
+  }
+
+  /* Apply default styles */
   * {
     @apply border-border;
   }
