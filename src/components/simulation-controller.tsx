@@ -50,7 +50,8 @@ export const SimulationController: React.FC<Props> = (props) => {
             <SelectValue placeholder="Select algorithm" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="fcfs">FCFS</SelectItem>
+            <SelectItem value="fcfs">First Come First Serve</SelectItem>
+            <SelectItem value="sjf">Shortest Job First</SelectItem>
           </SelectContent>
         </Select>
       </div>

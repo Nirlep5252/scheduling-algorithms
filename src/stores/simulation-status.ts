@@ -15,7 +15,7 @@ export interface SimulationProcess {
 
 export interface SimulationState {
   isRunning: boolean;
-  algorithm: "fcfs";
+  algorithm: "fcfs" | "sjf";
   processes: SimulationProcess[];
   currentTime: number;
   ganttChart: {

@@ -16,7 +16,6 @@ export const GanttChart: React.FC<Props> = (props) => {
   const total = ganttChart
     .map((item) => item.end - item.start)
     .reduce((a, b) => a + b, 0);
-  console.log(total);
 
   return (
     <div
