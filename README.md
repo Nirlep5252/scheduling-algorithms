@@ -1,5 +1,7 @@
 # Scheduling Algorithms Simulation
 
+View it live: [https://scheduling.nirlep.dev](https://scheduling.nirlep.dev)
+
 This project is a simulation of the following scheduling algorithms:
 
 - [x] First Come First Serve (FCFS)
