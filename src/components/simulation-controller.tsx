@@ -52,6 +52,7 @@ export const SimulationController: React.FC<Props> = (props) => {
           <SelectContent>
             <SelectItem value="fcfs">First Come First Serve</SelectItem>
             <SelectItem value="sjf">Shortest Job First</SelectItem>
+            <SelectItem value="srtf">Shortest Remaining Time First</SelectItem>
           </SelectContent>
         </Select>
       </div>

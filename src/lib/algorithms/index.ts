@@ -1,6 +1,7 @@
 import { SimulationState } from "@/stores/simulation-status";
 import { nextFCFS } from "./fcfs";
 import { nextSJF } from "./sjf";
+import { nextSRTF } from "./srtf";
 
 export interface NextStepReturnType {
   newTime: number;
@@ -12,12 +13,14 @@ export interface NextStepReturnType {
 export function nextStep(
   algorithm: SimulationState["algorithm"],
   processes: SimulationState["processes"],
-  newTime: SimulationState["currentTime"]
+  currentTime: SimulationState["currentTime"]
 ): NextStepReturnType {
   switch (algorithm) {
     case "fcfs":
-      return nextFCFS(processes, newTime);
+      return nextFCFS(processes, currentTime);
     case "sjf":
-      return nextSJF(processes, newTime);
+      return nextSJF(processes, currentTime);
+    case "srtf":
+      return nextSRTF(processes, currentTime);
   }
 }

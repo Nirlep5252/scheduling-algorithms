@@ -23,13 +23,14 @@ export function nextFCFS(
     };
   }
 
-  const newTime = currentTime + incompleteProcesses[0].burstTime;
+  const newTime = currentTime + incompleteProcesses[0].remainingBurstTime;
   return {
     newTime,
     processes: processes.map((process) => {
       if (process.id === incompleteProcesses[0].id) {
         return {
           ...process,
+          remainingBurstTime: 0,
           completionTime: newTime,
           turnAroundTime: newTime - incompleteProcesses[0].arrivalTime,
         };

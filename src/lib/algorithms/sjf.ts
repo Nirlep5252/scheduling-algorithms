@@ -27,7 +27,7 @@ export function nextSJF(
     (shortestBurstTimeProcess, process) => {
       if (
         process.arrivalTime <= currentTime &&
-        process.burstTime < shortestBurstTimeProcess.burstTime
+        process.remainingBurstTime < shortestBurstTimeProcess.remainingBurstTime
       ) {
         return process;
       }
@@ -35,13 +35,15 @@ export function nextSJF(
     },
     incompleteProcesses[0]
   );
-  const newTime = currentTime + arrivedProcessWithShortestBurstTime.burstTime;
+  const newTime =
+    currentTime + arrivedProcessWithShortestBurstTime.remainingBurstTime;
   return {
     newTime,
     processes: processes.map((process) => {
       if (process.id === arrivedProcessWithShortestBurstTime.id) {
         return {
           ...process,
+          remainingBurstTime: 0,
           completionTime: newTime,
           turnAroundTime:
             newTime - arrivedProcessWithShortestBurstTime.arrivalTime,

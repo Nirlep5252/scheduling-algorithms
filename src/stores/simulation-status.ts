@@ -9,13 +9,14 @@ export interface SimulationProcess {
   name: string;
   arrivalTime: number;
   burstTime: number;
+  remainingBurstTime: number;
   completionTime: number | null;
   turnAroundTime: number | null;
 }
 
 export interface SimulationState {
   isRunning: boolean;
-  algorithm: "fcfs" | "sjf";
+  algorithm: "fcfs" | "sjf" | "srtf";
   processes: SimulationProcess[];
   currentTime: number;
   ganttChart: {
@@ -65,6 +66,7 @@ export const useSimulationStatus = create<SimulationState & Actions>()(
               name: process.name,
               arrivalTime: process.arrivalTime,
               burstTime: process.burstTime,
+              remainingBurstTime: process.burstTime,
               completionTime: null,
               turnAroundTime: null,
             };
@@ -102,6 +104,10 @@ export const useSimulationStatus = create<SimulationState & Actions>()(
               if (process.id === lastProcess.process) {
                 return {
                   ...process,
+                  remainingBurstTime:
+                    process.remainingBurstTime +
+                    lastProcess.end -
+                    lastProcess.start,
                   completionTime: null,
                   turnAroundTime: null,
                 };

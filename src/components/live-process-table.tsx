@@ -31,6 +31,7 @@ export const LiveProcessView: React.FC<Props> = (props) => {
             <TableHead>Process ID</TableHead>
             <TableHead>Arrival Time</TableHead>
             <TableHead>Burst Time</TableHead>
+            <TableHead>Remaining Burst Time</TableHead>
             <TableHead>Completion Time</TableHead>
             <TableHead>Waiting Time</TableHead>
             <TableHead>Turn Around Time</TableHead>
@@ -42,6 +43,7 @@ export const LiveProcessView: React.FC<Props> = (props) => {
               <TableCell>{process.name}</TableCell>
               <TableCell>{process.arrivalTime}</TableCell>
               <TableCell>{process.burstTime}</TableCell>
+              <TableCell>{process.remainingBurstTime}</TableCell>
               <TableCell>{process.completionTime || "-"}</TableCell>
               <TableCell>
                 {process.turnAroundTime

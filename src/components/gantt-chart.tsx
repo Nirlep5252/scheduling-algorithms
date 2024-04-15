@@ -9,7 +9,7 @@ interface Props {
 }
 
 export const GanttChart: React.FC<Props> = (props) => {
-  const { ganttChart } = useSimulationStatus();
+  const { ganttChart, currentTime } = useSimulationStatus();
   const { processes } = useProcessesStore();
   const [parent] = useAutoAnimate();
 
@@ -21,10 +21,13 @@ export const GanttChart: React.FC<Props> = (props) => {
     <div
       className={cn(
         props.className,
-        "rounded-lg flex items-center justify-center overflow-x-scroll gap-1 w-full"
+        "rounded-lg flex items-center justify-center overflow-x-scroll gap-1 w-full relative"
       )}
       ref={parent}
     >
+      <div className="current-time absolute top-2 left-2">
+        Current Time: {currentTime}
+      </div>
       {ganttChart.length > 0 ? (
         ganttChart.map((item, index) => {
           return (
