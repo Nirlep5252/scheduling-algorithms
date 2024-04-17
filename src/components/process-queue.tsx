@@ -24,7 +24,7 @@ export const ProcessQueue: React.FC<Props> = (props) => {
         processQueue.map((item, index) => {
           return (
             <div key={index} className="relative group">
-              <div className="bg-primary h-20 w-12 rounded-lg flex items-center justify-center">
+              <div className="bg-primary h-20 w-20 rounded-lg flex items-center justify-center">
                 {item.name}
               </div>
             </div>
