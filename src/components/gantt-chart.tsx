@@ -21,7 +21,7 @@ export const GanttChart: React.FC<Props> = (props) => {
     <div
       className={cn(
         props.className,
-        "rounded-lg flex items-center justify-center overflow-x-scroll gap-1 w-full relative"
+        "flex items-center justify-center gap-1 w-full relative"
       )}
       ref={parent}
     >

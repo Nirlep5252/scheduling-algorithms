@@ -4,7 +4,7 @@ import { Process } from "./processes";
 import { toast } from "sonner";
 import { nextStep } from "@/lib/algorithms";
 
-export interface SimulationProcess {
+interface SimulationProcess {
   id: string;
   name: string;
   arrivalTime: number;
@@ -14,22 +14,27 @@ export interface SimulationProcess {
   turnAroundTime: number | null;
 }
 
+interface GanttChartItem {
+  process?: string;
+  start: number;
+  end: number;
+}
+
 export interface SimulationState {
   isRunning: boolean;
-  algorithm: "fcfs" | "sjf" | "srtf";
+  algorithm: "fcfs" | "sjf" | "srtf" | "rr";
   processes: SimulationProcess[];
+  processQueue: SimulationProcess[];
+  timeQuantum: number;
   currentTime: number;
-  ganttChart: {
-    process?: string;
-    start: number;
-    end: number;
-  }[];
+  ganttChart: GanttChartItem[];
 }
 
 interface Actions {
   stop: () => void;
   start: (processes: Process[]) => void;
   setAlgorithm: (algorithm: SimulationState["algorithm"]) => void;
+  setTimeQuantum: (value: SimulationState["timeQuantum"]) => void;
 
   next: () => void;
   previous: () => void;
@@ -43,19 +48,25 @@ export const useSimulationStatus = create<SimulationState & Actions>()(
       isRunning: false,
       algorithm: "fcfs",
       processes: [],
+      processQueue: [],
+      timeQuantum: 1,
       isFinished: true,
+
       stop() {
         set({
           isRunning: false,
           currentTime: 0,
           ganttChart: [],
           processes: [],
+          processQueue: [],
         });
       },
+
       start(processes) {
         set({
           ganttChart: [],
           currentTime: 0,
+          processQueue: [],
         });
         if (processes.length === 0) return;
         set({
@@ -73,8 +84,12 @@ export const useSimulationStatus = create<SimulationState & Actions>()(
           }),
         });
       },
+
       setAlgorithm(algorithm) {
         set({ algorithm });
+      },
+      setTimeQuantum(value) {
+        set({ timeQuantum: value });
       },
 
       next() {
@@ -82,24 +97,30 @@ export const useSimulationStatus = create<SimulationState & Actions>()(
         const newData = nextStep(
           state.algorithm,
           state.processes,
-          state.currentTime
+          state.currentTime,
+          state.processQueue,
+          state.timeQuantum
         );
         set((state) => ({
           currentTime: newData.newTime,
           processes: newData.processes,
           ganttChart: [...state.ganttChart, newData.ganttChartElement],
+          processQueue: newData.processQueue || state.processQueue,
         }));
         if (newData.isFinished) {
           toast.success("Simulation finished!");
           set({ isRunning: false });
         }
       },
+
       previous() {
         set((state) => {
           const lastProcess = state.ganttChart[state.ganttChart.length - 1];
+          const newTime =
+            state.currentTime - (lastProcess.end - lastProcess.start);
+          state.processQueue.pop();
           return {
-            currentTime:
-              state.currentTime - (lastProcess.end - lastProcess.start),
+            currentTime: newTime,
             processes: state.processes.map((process) => {
               if (process.id === lastProcess.process) {
                 return {
@@ -114,6 +135,10 @@ export const useSimulationStatus = create<SimulationState & Actions>()(
               }
               return process;
             }),
+            processQueue: [
+              state.processes.find((p) => p.id === lastProcess.process)!,
+              ...state.processQueue.filter((p) => p.arrivalTime <= newTime),
+            ],
             ganttChart: state.ganttChart.slice(0, -1),
             isFinished: false,
           };

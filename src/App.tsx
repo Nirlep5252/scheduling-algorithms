@@ -1,7 +1,7 @@
 import { ProcessManager } from "@/components/process-manager/index";
 import { SimulationController } from "@/components/simulation-controller";
 import { GanttChart } from "@/components/gantt-chart";
-import { ReadyQueue } from "@/components/ready-queue";
+import { ProcessQueue } from "@/components/process-queue";
 import { LiveProcessView } from "@/components/live-process-table";
 import { Toaster } from "@/components/ui/sonner";
 import { useSimulationStatus } from "./stores/simulation-status";
@@ -30,13 +30,11 @@ function App() {
         <ProcessManager className="col-span-1 row-span-4" />
         <LiveProcessView className="col-span-2 row-span-3" />
         <GanttChart
-          // @ts-expect-error round-robin is yet to be implemented so stfu typescript
-          className={`col-span-2 ${algorithm === "round-robin" ? "row-span-1" : "row-span-2"}`}
+          className={`col-span-2 ${algorithm === "rr" ? "row-span-1" : "row-span-2"}`}
         />
         <SimulationController className="col-span-1 row-span-1" />
-        {/* @ts-expect-error round-robin is yet to be implemented so stfu typescript */}
-        {algorithm === "round-robin" && (
-          <ReadyQueue className="col-span-2 row-span-1" />
+        {algorithm === "rr" && (
+          <ProcessQueue className="col-span-2 row-span-1" />
         )}
       </div>
     </>
